@@ -37,8 +37,16 @@ function installIfNotExistNpm {
 
 checkCommand "git";
 checkCommand "npm";
-installIfNotExistNpm "ionic@beta"
 installIfNotExistNpm "cordova"
+res=$(hasCommand "ionic");
+if [ "$res" == "1" ]; then
+  is_v2=$(ionic -v | grep "^2" | wc -l );
+  if [ "$is_v2" != 1 ]; then
+    installIfNotExistNpm "ionic@beta";
+  fi
+else
+  installIfNotExistNpm "ionic@beta";
+fi
 
 # ---- main body ----
 echo -n "app name : ";
