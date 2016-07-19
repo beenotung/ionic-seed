@@ -60,7 +60,7 @@ cd "$app_name"
 chmod +x add_page.sh
 
 # set translate stuff
-#npm install --save ng2-translate
+npm install --save ng2-translate
 mkdir -p "www/assets/i18n";
 cd "www/assets/i18n";
 echo "{
