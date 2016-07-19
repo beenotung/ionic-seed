@@ -51,9 +51,9 @@ fi
 # ---- main body ----
 echo -n "app name : ";
 read app_name;
-#ionic start "$app_name" sidemenu --v2
-rm -rf "$app_name";
-cp -rf seed "$app_name";
+ionic start "$app_name" sidemenu --v2
+#rm -rf "$app_name";
+#cp -rf seed "$app_name";
 
 cp add_page.sh "$app_name/";
 cd "$app_name"
