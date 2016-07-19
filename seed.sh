@@ -52,3 +52,8 @@ fi
 echo -n "app name : ";
 read app_name;
 ionic start "$app_name" sidemenu --v2
+
+cp add_page.sh "$app_name/";
+
+#cd "$app_name/app/pages";
+#cp -r page1
