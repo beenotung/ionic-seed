@@ -54,6 +54,37 @@ read app_name;
 ionic start "$app_name" sidemenu --v2
 
 cp add_page.sh "$app_name/";
+cd "$app_name"
+chmod +x add_page.sh
 
-#cd "$app_name/app/pages";
-#cp -r page1
+# set translate stuff
+npm install --save ng2-translate
+mkdir -p "www/assets/i18n";
+cd "www/assets/i18n";
+echo "{
+  \"DEMO\": \"Demo\"
+}" > en.json;
+cp en.json zh.json;
+cp en.json ch.json;
+cd "../../../";
+cd "app";
+echo "
+import {provide} from '@angular/core';
+import {Http, HTTP_PROVIDERS} from '@angular/http';
+import {TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+" | cat - app.ts | tail -n +2 | head -n -1 > temp && mv temp app.ts;
+sed -i "14i  , pipes: [TranslatePipe]" app.ts;
+echo "ionicBootstrap(MyApp, [[provide(TranslateLoader, {
+  useFactory: (http:Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),
+  deps: [Http]
+}), TranslateService]], {});" >> app.ts
+cd "../";
+
+# init demo page
+echo "Demo" | ./add_page.sh "Page1";
+cd "app/pages/demo";
+sed -i 's/Page Uno/{{ "DEMO" | translate }}/' demo.html;
+cd "../../../";
+
+echo "";
+echo "All Done.";
