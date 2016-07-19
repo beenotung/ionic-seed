@@ -79,40 +79,31 @@ sed -i "/templateUrl: /a \  , pipes: [TranslatePipe]" app.ts;
 echo "ionicBootstrap(MyApp, [[provide(TranslateLoader, {
   useFactory: (http:Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),
   deps: [Http]
-}), TranslateService]], {});" >> app.ts
+}), TranslateService]], {});" >> app.ts;
+sed -i "s/constructor(private platform: Platform)/constructor(\
+\n    private platform:Platform\
+\n    , public translate:TranslateService\
+\n  )/" app.ts;
 sed -i "/this.initializeApp();/a \ \ \ \ this.translateConfig();" app.ts;
-sed -i "/  initializeApp/i \
-\ \ translateConfig()\{\
+sed -i "/ initializeApp/i \  translateConfig() {\
 \n    let userLang = navigator.language.split('-')[0];\
 \n    userLang = /(zh|ch|en)/gi.test(userLang) ? userLang : 'en';\
 \n\
 \n    this.translate.setDefaultLang('en');\
 \n    this.translate.use(userLang);\
 \n\
-\n    console.debug('userLang', userLang);\
+\n    console.log('userLang', userLang);\
 \n  }\n" app.ts;
-exit 0;
-sed i "/ initializeApp\(\)/i \
-  translateConfig() {
-    let userLang = navigator.language.split('-')[0];
-    userLang = /(zh|ch|en)/gi.test(userLang) ? userLang : 'en';
-
-    this.translate.setDefaultLang('en');
-    this.translate.use(userLang);
-
-    console.debug('userLang', userLang);
-  }
-" app.ts;
 cd "../";
 
 # init demo page
-echo "Demo" | ./add_page.sh "Page1";
+echo "Demo" | ./add_page.sh "Page1" --skip-inject;
 cd "app/pages/demo";
 sed -i 's/Page Uno/{{ "DEMO" | translate }}/' demo.html;
-cd "../../"
-#sed -i '/component: Page/d' app.ts
-sed -i "11i import { Demo } from './pages/demo/demo';" app.ts;
-sed -i "31i  , {title: \"DEMO\", component: Demo}" app.ts;
+cd "../../";
+sed -i "/import { Page2 }/a import { Demo } from './pages/demo/demo';" app.ts;
+sed -i "/this.pages/i \    this.translate.get('DEMO').subscribe(x=>this.pages.push({title: x, component: Demo}));" app.ts;
+exit 0;
 cd "../";
 
 echo "";
