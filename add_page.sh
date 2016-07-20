@@ -49,7 +49,7 @@ echo "@import \"../pages/$page/$page\";" >> app.core.scss
 cd "../../";
 if [ "$2" != "--skip-inject" ]; then
   cd "app";
-  sed -i "/import { $Demo }/i import { $Page } from './pages/$page/$page';" app.ts;
+  sed -i "/pages\/$demo\/$demo/i import { $Page } from './pages/$page/$page';" app.ts;
   sed -i "/this.translate.get('$DEMO')/i \    this.translate.get('$PAGE').subscribe(x=>this.pages.push({title: x, component: $Page}));" app.ts;
   cd "../www/assets/i18n";
   sed -i "/$DEMO/a\
