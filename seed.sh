@@ -84,7 +84,7 @@ echo "ionicBootstrap(MyApp, [[provide(TranslateLoader, {
 }), TranslateService]], {});" >> app.ts;
 sed -i "s/constructor(private platform: Platform)/constructor(\
 \n    private platform:Platform\
-\n    , public translate:TranslateService\
+\n    , private translate:TranslateService\
 \n  )/" app.ts;
 sed -i "/this.initializeApp();/a \ \ \ \ this.translateConfig();" app.ts;
 sed -i "/ initializeApp/i \  translateConfig() {\
@@ -102,6 +102,12 @@ cd "../";
 echo "Demo" | ./add_page.sh "Page1" --skip-inject;
 cd "app/pages/demo";
 sed -i 's/Page Uno/{{ "DEMO" | translate }}/' demo.html;
+echo "import {TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';" | cat - demo.ts > temp && mv temp demo.ts;
+sed -i "/templateUrl: /a \  , pipes: [TranslatePipe]" demo.ts;
+sed -i "s/constructor(private navController: NavController)/constructor(\
+\n    private navController: NavController\
+\n    , private translate:TranslateService\
+\n  )/" demo.ts;
 cd "../../";
 sed -i "/import { Page2 }/a import { Demo } from './pages/demo/demo';" app.ts;
 sed -i "/this.pages/i \    this.translate.get('DEMO').subscribe(x=>this.pages.push({title: x, component: Demo}));" app.ts;
