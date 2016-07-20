@@ -30,7 +30,9 @@ function installIfNotExistNpm {
   else
     cmd="npm";
   fi
-  echo "$cmd install -g $1" | bash;
+  cmd="$cmd install -g $1";
+  echo "$cmd";
+  echo "$cmd" | bash;
 }
 
 # ---- requirement checking ----
